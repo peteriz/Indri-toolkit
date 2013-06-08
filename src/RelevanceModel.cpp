@@ -23,7 +23,7 @@
 // RelevanceModel
 //
 
-indri::query::RelevanceModel::RelevanceModel( 
+indri::query::RelevanceModel::RelevanceModel(
                   indri::api::QueryEnvironment& environment,
                   const std::string& smoothing,
                   int maxGrams,
@@ -88,7 +88,7 @@ bool isValidWord(const string & word)
   size_t pos = 0;
 
   while (pos < length)
-  { 
+  {
     if(isalnum((unsigned char)*(chArray+pos)) == 0)
     {
       return false;
@@ -107,7 +107,7 @@ void indri::query::RelevanceModel::_countGrams() {
     std::vector<int>& positions = v->positions();
     std::vector<std::string>& stems = v->stems();
     if (result.end == 0) result.end = positions.size();
-    
+
     // for each word position in the text
     for( int j = result.begin; j < result.end; j++ ) {
       int maxGram = std::min( _maxGrams, result.end - j );
@@ -120,7 +120,7 @@ void indri::query::RelevanceModel::_countGrams() {
 
         // build the gram
         for( int k = 0; k < n; k++ ) {
-          if( positions[ k + j ] == 0 || (! isValidWord(stems[ positions[ k + j ] ])) ) {
+          if( positions[ k + j ] == 0 ) {
             containsOOV = true;
             break;
           }
@@ -135,7 +135,7 @@ void indri::query::RelevanceModel::_countGrams() {
           break;
         }
 
-        GramCounts** gramCounts = 0;        
+        GramCounts** gramCounts = 0;
         gramCounts = _gramTable.find( &newCounts->gram );
 
         if( gramCounts == 0 ) {
@@ -164,7 +164,7 @@ void indri::query::RelevanceModel::_countGrams() {
 void indri::query::RelevanceModel::_scoreGrams() {
   HGram::iterator iter;
   double collectionCount = (double)_environment.termCount();
-  indri::query::TermScoreFunction* function = 0;  
+  indri::query::TermScoreFunction* function = 0;
 
   // for each gram we've seen
   for( iter = _gramTable.begin(); iter != _gramTable.end(); iter++ ) {
@@ -245,7 +245,7 @@ void indri::query::RelevanceModel::_sortGrams() {
   // copy grams into a _grams vector
   HGram::iterator iter;
   _grams.clear();
-  
+
   for( iter = _gramTable.begin(); iter != _gramTable.end(); iter++ ) {
     _grams.push_back( *(iter->first) );
   }
